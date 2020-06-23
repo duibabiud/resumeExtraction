@@ -1,4 +1,3 @@
-
 import os, glob, re
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
@@ -126,38 +125,60 @@ class Parse():
 
     #Function to get Employee Name.
     def getName(self, inputString, infoDict, debug=False):
-        nm = re.search('\b[a-zA-Z]*[^\s@.]\b\s?\b[a-zA-Z]*[^\s@.]\b',inputString) # incomplete
-        if nm is None:
-            infoDict['EMPLOYEE NAME'] = 'NA'
-        else:
-            infoDict['EMPLOYEE NAME'] = nm
+        #nm = re.search('\b[a-zA-Z]*[^\s@.]\b\s?\b[a-zA-Z]*[^\s@.]\b',inputString) # incomplete
+        #if nm is None:
+        infoDict['EMPLOYEE NAME'] = 'NAME'
+        #else:
+        #   infoDict['EMPLOYEE NAME'] = nm
 
     #Function to get Date Of birth.
     def getDOB(self, inputString, infoDict):
-        dob = re.search(r'^((31(?!\ (Feb(ruary)?|Apr(il)?|June?|(Sep(?=\b|t)t?|Nov)(ember)?)))|((30|29)(?!\ Feb(ruary)?))|(29(?=\ Feb(ruary)?\ (((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00)))))|(0?[1-9])|1\d|2[0-8])\ (Jan(uary)?|Feb(ruary)?|Ma(r(ch)?|y)|Apr(il)?|Ju((ly?)|(ne?))|Aug(ust)?|Oct(ober)?|(Sep(?=\b|t)t?|Nov|Dec)(ember)?)\ ((1[6-9]|[2-9]\d)\d{2})$',inputString) #incomplete
+        dob = re.search(r'(((DOB\s*:)|(D.O.B\s*:))\s*\d{2}[\-/]\d{2}[\-/]\d{4})|(Date of Birth)\s*:[\s]*\d{2}[\-/]\d{2}[\-/]\d{4}', inputString, re.IGNORECASE)
         if dob is None:
             infoDict['DATE OF BIRTH'] = 'NA'
         else:
-            infoDict['DATE OF BIRTH'] = dob[0]
+            d = dob[0].split()
+            if len(d) == 2:
+                infoDict['DATE OF BIRTH'] = d[1]
+            else:
+                infoDict['DATE OF BIRTH'] = 'NA'
 
     #Function to get Gender.
     def getGender(self, inputString, infoDict):
-
-        infoDict['GENDER'] = '-'   #incomplete
+        g = re.search(r'(gender)[\s]*:\s*((male)|(female)|(m)|(f))', inputString, re.IGNORECASE)
+        if g is None:
+            infoDict['GENDER'] = 'NA'
+        else:
+            g = g[0].split()
+            if len(g) == 2:
+                infoDict['GENDER'] = g[1]
+            else:
+                infoDict['GENDER'] = 'NA'
 
     #Function to get Nationality.
     def getNationality(self, inputString, infoDict):
-        infoDict['NATIONALITY'] = '-'   #incomplete
+        nl = re.search(r'(nationality)[\s]*:\s*[a-zA-Z]*', inputString, re.IGNORECASE)
+        if nl is None:
+            infoDict['NATIONALITY'] = 'NA'
+        else:
+            nl = nl[0].split()
+            if len(nl) == 2:
+                infoDict['NATIONALITY'] = nl[1]
+            else:
+                infoDict['NATIONALITY'] = 'NA'
 
     #Function to get Current Address
-    def getCurrentAddress(self,inputString, infoDict):
-        regular_expression = re.compile(r"[0-9]+ [a-z0-9,\.# ]+\bCA\b", re.IGNORECASE) #incomplete
-        result = re.search(regular_expression, inputString)
+    def getCurrentAddress(self, inputString, infoDict):
+        result = re.search(r'(place[\s]*:)\s[A-Za-z]*', inputString,re.IGNORECASE)
+
         if result is None:
             infoDict['CURRENT ADDRESS'] = 'NA'
         else:
-            infoDict['CURRENT ADDRESS'] = result
-
+            result = result[0].split()
+            if len(result) == 2:
+                infoDict['CURRENT ADDRESS'] = result[1]
+            else:
+                infoDict['CURRENT ADDRESS'] = 'NA'
     # def csvToExcel(self,fname):
     #     df = pd.read_csv(fname, sep=',' )
     #     cols = ["EMPLOYEE NAME","DATE OF BIRTH","GENDER","NATIONALITY"]
