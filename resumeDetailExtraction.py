@@ -78,7 +78,7 @@ class Parse():
     inputString = ''
 
     def __init__(self):
-        print('Starting Programme')
+        print('Starting Program....')
 
         # Glob module matches certain patterns
         doc_files = glob.glob("resumes/*.doc")
@@ -137,9 +137,9 @@ class Parse():
         if dob is None:
             infoDict['DATE OF BIRTH'] = 'NA'
         else:
-            d = dob[0].split()
+            d = dob[0].split(':')
             if len(d) == 2:
-                infoDict['DATE OF BIRTH'] = d[1]
+                infoDict['DATE OF BIRTH'] = d[1].strip()
             else:
                 infoDict['DATE OF BIRTH'] = 'NA'
 
@@ -149,9 +149,9 @@ class Parse():
         if g is None:
             infoDict['GENDER'] = 'NA'
         else:
-            g = g[0].split()
+            g = g[0].split(':')
             if len(g) == 2:
-                infoDict['GENDER'] = g[1]
+                infoDict['GENDER'] = g[1].strip()
             else:
                 infoDict['GENDER'] = 'NA'
 
@@ -161,9 +161,9 @@ class Parse():
         if nl is None:
             infoDict['NATIONALITY'] = 'NA'
         else:
-            nl = nl[0].split()
+            nl = nl[0].split(':')
             if len(nl) == 2:
-                infoDict['NATIONALITY'] = nl[1]
+                infoDict['NATIONALITY'] = nl[1].strip()
             else:
                 infoDict['NATIONALITY'] = 'NA'
 
@@ -174,9 +174,9 @@ class Parse():
         if result is None:
             infoDict['CURRENT ADDRESS'] = 'NA'
         else:
-            result = result[0].split()
+            result = result[0].split(':')
             if len(result) == 2:
-                infoDict['CURRENT ADDRESS'] = result[1]
+                infoDict['CURRENT ADDRESS'] = result[1].strip()
             else:
                 infoDict['CURRENT ADDRESS'] = 'NA'
     # def csvToExcel(self,fname):
