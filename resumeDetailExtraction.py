@@ -134,12 +134,12 @@ class Parse():
 
     #Function to get Employee Name.
     def getName(self, inputString, infoDict):
-        nm = re.search(r'([a-zA-Z0-9]*@[a-z]*.((com)|(org)|(net)|(co.in)))',inputString,re.IGNORECASE) # incomplete
+        #nm = re.search(r'([a-zA-Z0-9]*@[a-z]*.((com)|(org)|(net)|(co.in)))',inputString,re.IGNORECASE) # incomplete
         #eml = re.search(r'\S+@\S+', inputString)
-        if nm is None:
-            infoDict['EMPLOYEE NAME'] = 'NA'
-        else:
-            infoDict['EMPLOYEE NAME'] = nm[0].split('@')[0]
+        #if nm is None:
+        infoDict['EMPLOYEE NAME'] = 'NAME'
+        #else:
+        #infoDict['EMPLOYEE NAME'] = nm[0].split('@')[0]
         #else:
         #   infoDict['EMPLOYEE NAME'] = nm
 
