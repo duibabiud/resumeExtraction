@@ -145,7 +145,7 @@ class Parse():
 
     #Function to get Date Of birth.
     def getDOB(self, inputString, infoDict):
-        dob = re.search(r'(((DOB\s*:)|(D.O.B\s*:))\s*\d{2}[\.-/]\d{2}[\.-/]\d{4})|((DOB\s*:)|(D.O.B\s*:))\s*(\d{2}((nd)|(th)|(rd))\s[a-zA-z]*\s\d{4})|(Date of Birth)\s*:[\s]*\d{2}[\.-/]\d{2}[\.-/]\d{4}|(\d+((nd)|(th)|(rd))\s[a-zA-Z]*\s\d{4})', inputString, re.IGNORECASE)
+        dob = re.search(r'(((DOB\s*:)|(D.O.B\s*:))\s*\d{2}[-./]\d{2}[-./]\d{4})|((DOB\s*:)|(D.O.B\s*:))\s*(\d{2}((nd)|(th)|(rd))\s[a-zA-z]*\s\d{4})|(Date of Birth)\s*:[\s]*\d{2}[-./]\d{2}[-./]\d{4}|(\d+((nd)|(th)|(rd))\s[a-zA-Z]*\s\d{4})', inputString, re.IGNORECASE)
 
         if dob is None:
             infoDict['DATE OF BIRTH'] = 'NA'
@@ -158,7 +158,7 @@ class Parse():
 
     #Function to get Gender.
     def getGender(self, inputString, infoDict):
-        g = re.search(r'(((gender)|(sex))[\s]*:\s*((male)|(female)|(m)|(f)))|((male)|(female))', inputString, re.IGNORECASE)
+        g = re.search(r'((((gender)|(sex))[\s]*:\s*((male)|(female)|(m)|(f)))|((male)|(female)))', inputString, re.IGNORECASE)
         if g is None:
             infoDict['GENDER'] = 'NA'
         else:
@@ -170,7 +170,7 @@ class Parse():
 
     #Function to get Nationality.
     def getNationality(self, inputString, infoDict):
-        nl = re.search(r'(nationality)[\s]*:\s*[a-zA-Z]*', inputString, re.IGNORECASE)
+        nl = re.search(r'((nationality)|(country))[\s]*:\s*[a-zA-Z]*', inputString, re.IGNORECASE)
         if nl is None:
             infoDict['NATIONALITY'] = 'NA'
         else:
@@ -182,7 +182,7 @@ class Parse():
 
     #Function to get Current Address
     def getCurrentAddress(self, inputString, infoDict):
-        result = re.search(r'(((place)|(current location)|(current address))\s*:\s*[A-Za-z]*)', inputString,re.IGNORECASE)
+        result = re.search(r'(((place)|(current location)|(current address))\s*:\s[A-Za-z]*)', inputString,re.IGNORECASE)
 
         if result is None:
             infoDict['CURRENT ADDRESS'] = 'NA'
