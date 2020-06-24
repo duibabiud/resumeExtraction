@@ -1,3 +1,4 @@
+
 import os, glob, re
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
@@ -10,8 +11,16 @@ from docx import Document
 
 
 def convertDocxToText(path):
+    txt = []
     document = Document(path)
-    return "\n".join([para.text for para in document.paragraphs])
+    txt.append("\n".join([para.text for para in document.paragraphs]))
+    for table in document.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                txt.append("\n".join([para.text for para in cell.paragraphs]))
+
+    return ('\n'.join([str(e) for e in txt]))
+
 
 
 def convertPDFToText(path):
@@ -78,7 +87,7 @@ class Parse():
     inputString = ''
 
     def __init__(self):
-        print('Starting Program....')
+        print('Starting Program...')
 
         # Glob module matches certain patterns
         doc_files = glob.glob("resumes/*.doc")
@@ -124,16 +133,20 @@ class Parse():
             return ''
 
     #Function to get Employee Name.
-    def getName(self, inputString, infoDict, debug=False):
-        #nm = re.search('\b[a-zA-Z]*[^\s@.]\b\s?\b[a-zA-Z]*[^\s@.]\b',inputString) # incomplete
-        #if nm is None:
-        infoDict['EMPLOYEE NAME'] = 'NAME'
+    def getName(self, inputString, infoDict):
+        nm = re.search(r'([a-zA-Z0-9]*@[a-z]*.((com)|(org)|(net)|(co.in)))',inputString,re.IGNORECASE) # incomplete
+        #eml = re.search(r'\S+@\S+', inputString)
+        if nm is None:
+            infoDict['EMPLOYEE NAME'] = 'NA'
+        else:
+            infoDict['EMPLOYEE NAME'] = nm[0].split('@')[0]
         #else:
         #   infoDict['EMPLOYEE NAME'] = nm
 
     #Function to get Date Of birth.
     def getDOB(self, inputString, infoDict):
-        dob = re.search(r'(((DOB\s*:)|(D.O.B\s*:))\s*\d{2}[\-/]\d{2}[\-/]\d{4})|(Date of Birth)\s*:[\s]*\d{2}[\-/]\d{2}[\-/]\d{4}', inputString, re.IGNORECASE)
+        dob = re.search(r'(((DOB\s*:)|(D.O.B\s*:))\s*\d{2}[\.-/]\d{2}[\.-/]\d{4})|((DOB\s*:)|(D.O.B\s*:))\s*(\d{2}((nd)|(th)|(rd))\s[a-zA-z]*\s\d{4})|(Date of Birth)\s*:[\s]*\d{2}[\.-/]\d{2}[\.-/]\d{4}|(\d+((nd)|(th)|(rd))\s[a-zA-Z]*\s\d{4})', inputString, re.IGNORECASE)
+
         if dob is None:
             infoDict['DATE OF BIRTH'] = 'NA'
         else:
@@ -141,11 +154,11 @@ class Parse():
             if len(d) == 2:
                 infoDict['DATE OF BIRTH'] = d[1].strip()
             else:
-                infoDict['DATE OF BIRTH'] = 'NA'
+                infoDict['DATE OF BIRTH'] = dob[0]
 
     #Function to get Gender.
     def getGender(self, inputString, infoDict):
-        g = re.search(r'(gender)[\s]*:\s*((male)|(female)|(m)|(f))', inputString, re.IGNORECASE)
+        g = re.search(r'(((gender)|(sex))[\s]*:\s*((male)|(female)|(m)|(f)))|((male)|(female))', inputString, re.IGNORECASE)
         if g is None:
             infoDict['GENDER'] = 'NA'
         else:
@@ -169,7 +182,7 @@ class Parse():
 
     #Function to get Current Address
     def getCurrentAddress(self, inputString, infoDict):
-        result = re.search(r'(place[\s]*:)\s[A-Za-z]*', inputString,re.IGNORECASE)
+        result = re.search(r'(((place)|(current location)|(current address))\s*:\s*[A-Za-z]*)', inputString,re.IGNORECASE)
 
         if result is None:
             infoDict['CURRENT ADDRESS'] = 'NA'
