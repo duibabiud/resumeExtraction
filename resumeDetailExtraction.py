@@ -145,16 +145,18 @@ class Parse():
 
     #Function to get Date Of birth.
     def getDOB(self, inputString, infoDict):
-        dob = re.search(r'(((DOB\s*:)|(D.O.B\s*:))\s*\d{2}[-./]\d{2}[-./]\d{4})|((DOB\s*:)|(D.O.B\s*:))\s*(\d{2}((nd)|(th)|(rd))\s[a-zA-z]*\s\d{4})|(Date of Birth)\s*:[\s]*\d{2}[-./]\d{2}[-./]\d{4}|(\d+((nd)|(th)|(rd))\s[a-zA-Z]*\s\d{4})', inputString, re.IGNORECASE)
-
+        dob = re.search(r'(((DOB\s*:)|(D.O.B\s*:)|(date of birth\s*:))[- ]\s*\d{1,2}[-,./ ]*\s*((\d{1,2})|([a-zA-z]*))[-,./ ]\s*\d{4})|((DOB\s*:)|(D.O.B\s*:)|(date of birth\s*:))-*\s*(\d{1,2}((nd)|(th)|(rd))[-,./ ]*\s*[a-zA-z]*[-,./ ]*\s*\d{4})|((DOB)|(D.O.B)|(Date of Birth))\s*:-*\s*\d{1,2}[-,./ ]\s*\d{1,2}[-,./ ]\s*\d{4}', inputString, re.IGNORECASE)
+        #dob = re.search(r'\d{1,2}[-,./ ]\s*((\d{1,2})|([a-zA-z]*))[-,./ ]\s*\d{4}|\d{1,2}[a-z]*[-,./ ]\s*[a-z]*[-,./ ]\s*\d{4}|[a-zA-Z]+[-,./ ]\s*\d{1,2}[-,./ ]\s*\d{4}', inputString, re.IGNORECASE)
         if dob is None:
             infoDict['DATE OF BIRTH'] = 'NA'
         else:
             d = dob[0].split(':')
             if len(d) == 2:
-                infoDict['DATE OF BIRTH'] = d[1].strip()
+                d = d[1].strip()
+                infoDict['DATE OF BIRTH'] = d.replace(',','')
             else:
-                infoDict['DATE OF BIRTH'] = dob[0]
+                d = dob[0].strip()
+                infoDict['DATE OF BIRTH'] = d.replace(',','')
 
     #Function to get Gender.
     def getGender(self, inputString, infoDict):
@@ -166,7 +168,7 @@ class Parse():
             if len(g) == 2:
                 infoDict['GENDER'] = g[1].strip()
             else:
-                infoDict['GENDER'] = 'NA'
+                infoDict['GENDER'] = g[0]
 
     #Function to get Nationality.
     def getNationality(self, inputString, infoDict):
@@ -178,7 +180,7 @@ class Parse():
             if len(nl) == 2:
                 infoDict['NATIONALITY'] = nl[1].strip()
             else:
-                infoDict['NATIONALITY'] = 'NA'
+                infoDict['NATIONALITY'] = nl[0]
 
     #Function to get Current Address
     def getCurrentAddress(self, inputString, infoDict):
@@ -191,13 +193,7 @@ class Parse():
             if len(result) == 2:
                 infoDict['CURRENT ADDRESS'] = result[1].strip()
             else:
-                infoDict['CURRENT ADDRESS'] = 'NA'
-    # def csvToExcel(self,fname):
-    #     df = pd.read_csv(fname, sep=',' )
-    #     cols = ["EMPLOYEE NAME","DATE OF BIRTH","GENDER","NATIONALITY"]
-    #     df = df[cols]
-    #     df.to_excel('output.xlsx')
+                infoDict['CURRENT ADDRESS'] = result[0]
 
 if __name__ == "__main__":
     p = Parse()
-    #p.csvToExcel('resultsCSV.csv')
