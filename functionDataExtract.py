@@ -56,7 +56,7 @@ def convertPDFToTextUsingPypdf2(path):
     return text
 
 
-def getData(inputString,file_path):  # Functions gets two values one is text from file other file name with extension or full path with file extension.
+def getData(inputString,file_path):
     dob1 = []
     gen = []
     nation = []
@@ -75,21 +75,21 @@ def getData(inputString,file_path):  # Functions gets two values one is text fro
             text, re.IGNORECASE)
 
         if reg is None:
-            dob1 += 'NA'
+            dob1 += ['NA']
         else:
             dobReg = re.search(
                 r'(\d{1,2}[-,./ ]*\s*((\d{1,2})|([a-zA-z]*))[-,./ ]\s*\d{4})|(\d{1,2}((st)|(nd)|(th)|(rd))[-,./ ]*\s*[a-zA-z]*[-,./ ]*\s*\d{4})|(d{1,2}[-,./ ]\s*\d{1,2}[-,./ ]\s*\d{4}|[a-zA-Z]*[-,./ ]\d{1,2}[-,./ ]\s*\d{4})',
                 reg[0], re.IGNORECASE)
-            dob1 += dobReg[0].replace(',', ' ')
+            dob1 += [dobReg[0].replace(',', ' ')]
 
     elif reg is None:
-        dob1 += 'NA'
+        dob1 += ['NA']
     else:
         dobReg = re.search(
             r'(\d{1,2}[-,./ ]*\s*((\d{1,2})|([a-zA-z]*))[-,./ ]\s*\d{4})|(\d{1,2}((st)|(nd)|(th)|(rd))[-,./ ]*\s*[a-zA-z]*[-,./ ]*\s*\d{4})|(d{1,2}[-,./ ]\s*\d{1,2}[-,./ ]\s*\d{4}|[a-zA-Z]*[-,./ ]\d{1,2}[-,./ ]\s*\d{4})',
             reg[0], re.IGNORECASE)
         dob = dobReg[0]
-        dob1 += dob.replace(',', ' ')
+        dob1 += [dob.replace(',', ' ')]
 
 # Extract Gender
     reg = re.search(r'((((gender)|(sex))[\s]*:\s*((male)|(female)|(m)|(f)))|((male)|(female)))', inputString, re.IGNORECASE)
@@ -99,15 +99,15 @@ def getData(inputString,file_path):  # Functions gets two values one is text fro
         text = text.replace('\n', '')
         reg = re.search(r'((((gender)|(sex))[\s]*[-=:]\s*((male)|(female)|(m)|(f)))|((male)|(female)))',text, re.IGNORECASE)
         if reg is None:
-            gen += 'NA'
+            gen += ['NA']
         else:
             g = re.search(r'((male)|(female)|(m)|(f))', reg[0], re.IGNORECASE)
-            gen += g[0].strip()
+            gen += [g[0].strip()]
     elif reg is None:
-        gen += 'NA'
+        gen += ['NA']
     else:
         g = re.search(r'((male)|(female)|(m)|(f))', reg[0], re.IGNORECASE)
-        gen += g[0].strip()
+        gen += [g[0].strip()]
 
 
 #Extract Nationality
@@ -118,17 +118,17 @@ def getData(inputString,file_path):  # Functions gets two values one is text fro
         text = text.replace('\n', '')
         reg = re.search(r'(((nationality)|(country))[\s]*[-=:]\s*[a-zA-Z]*)',text, re.IGNORECASE)
         if reg is None:
-            nation += 'NA'
+            nation += ['NA']
         else:
             nl = re.search(r'([-=:]\s*[a-zA-Z]*)', reg[0], re.IGNORECASE)
             nl = re.split('[-=:]', nl[0])
-            nation += nl[1].strip()
+            nation += [nl[1].strip()]
     elif reg is None:
-        nation += 'NA'
+        nation += ['NA']
     else:
         nl = re.search(r'([-=:]\s*[a-zA-Z]*)', reg[0], re.IGNORECASE)
         nl = re.split('[-=:]', nl[0])
-        nation += nl[1].strip()
+        nation += [nl[1].strip()]
 
 #Extract Current Address
     reg = re.search(r'(((current location)|(current address))\s*[-:=]\s*[A-Za-z]*)|(place\s*[-=:]\s{1,5}[a-zA-z]+)', inputString,re.IGNORECASE)
@@ -138,20 +138,20 @@ def getData(inputString,file_path):  # Functions gets two values one is text fro
         text = text.replace('\n', '')
         reg = re.search(r'(((current location)|(current address))\s*[-:=]\s*[A-Za-z]*)|(place\s*[-=: ][ ]{1,5}[a-zA-z]+)', text, re.IGNORECASE)
         if reg is None:
-            loc += 'NA'
+            loc += ['NA']
         else:
             adr = re.search(r'([-=:]\s{0,5}[a-zA-z]+)', reg[0], re.IGNORECASE)
             adr = re.split('[-=:]', adr[0])
-            loc += adr[1].strip()
+            loc += [adr[1].strip()]
     elif reg is None:
-        loc += 'NA'
+        loc += ['NA']
     else:
         adr = re.search(r'([-=:]\s{0,5}[a-zA-z]+)', reg[0], re.IGNORECASE)
         adr = re.split('[-=:]', adr[0])
         if adr[1].strip() == '':
-            loc += 'NA'
+            loc += ['NA']
         else:
-            loc += adr[1].strip()
+            loc += [adr[1].strip()]
 
     return dob1, gen, nation, loc
 
