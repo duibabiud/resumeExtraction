@@ -146,42 +146,33 @@ class Parse():
     def getName(self, inputString, infoDict, file):  # incomplete function
         infoDict['EMPLOYEE NAME'] = 'NAME'
 
+
     #Function to get Date Of birth.
     def getDOB(self, inputString, infoDict, file):
-        reg = re.search(r'(((DOB\s*:)|(D.O.B\s*:)|(date of birth\s*:)|(birthday\s*:))[- ]\s*\d{1,2}[-,./ ]*\s*((\d{1,2})|([a-zA-z]*))[-,./ ]\s*\d{4})|((DOB\s*:)|(D.O.B\s*:)|(date of birth\s*:)|(birthday\s*:))-*\s*(\d{1,2}((nd)|(th)|(rd))[-,./ ]*\s*[a-zA-z]*[-,./ ]*\s*\d{4})|((DOB)|(D.O.B)|(Date of Birth)|(birthday))\s*:-*\s*\d{1,2}[-,./ ]\s*\d{1,2}[-,./ ]\s*\d{4}|((DOB)|(D.O.B)|(Date of Birth)|(birthday))\s*:-*\s*[a-zA-Z]*[-,./ ]\d{1,2}[-,./ ]\s*\d{4}', inputString, re.IGNORECASE)
+        reg = re.search(r'(((DOB)|(D.O.B)|(date of birth)|(birthday))\s*:*[- ]\s*\d{1,2}[-,./ ]*\s*((\d{1,2})|([a-zA-z]*))[-,./ ]\s*\d{4})|((DOB)|(D.O.B)|(date of birth)|(birthday))\s*:*-*\s*(\d{1,2}((st)|(nd)|(th)|(rd))[-,./ ]*\s*[a-zA-z]*[-,./ ]*\s*\d{4})|((DOB)|(D.O.B)|(Date of Birth)|(birthday))\s*:*-*\s*\d{1,2}[-,./ ]\s*\d{1,2}[-,./ ]\s*\d{4}|((DOB)|(D.O.B)|(Date of Birth)|(birthday))\s*:*-*\s*[a-zA-Z]*[-,./ ]\d{1,2}[-,./ ]\s*\d{4}', inputString, re.IGNORECASE)
+
         ext = file[-4:]
         if reg is None and ext == '.pdf':
             text = convertPDFToTextUsingPypdf2(file)  # checking for text using PyPDF2 if not found using pdfminer
             text = text.replace('\n', '')
-            reg = re.search(r'(((DOB\s*:)|(D.O.B\s*:)|(date of birth\s*:)|(birthday\s*:))[- ]\s*\d{1,2}[-,./ ]*\s*((\d{1,2})|([a-zA-z]*))[-,./ ]\s*\d{4})|((DOB\s*:)|(D.O.B\s*:)|(date of birth\s*:)|(birthday\s*:))-*\s*(\d{1,2}((nd)|(th)|(rd))[-,./ ]*\s*[a-zA-z]*[-,./ ]*\s*\d{4})|((DOB)|(D.O.B)|(Date of Birth)|(birthday))\s*:-*\s*\d{1,2}[-,./ ]\s*\d{1,2}[-,./ ]\s*\d{4}|((DOB)|(D.O.B)|(Date of Birth)|(birthday))\s*:-*\s*[a-zA-Z]*[-,./ ]\d{1,2}[-,./ ]\s*\d{4}',text, re.IGNORECASE)
+            reg = re.search(r'(((DOB)|(D.O.B)|(date of birth)|(birthday))\s*:*[- ]\s*\d{1,2}[-,./ ]*\s*((\d{1,2})|([a-zA-z]*))[-,./ ]\s*\d{4})|((DOB)|(D.O.B)|(date of birth)|(birthday))\s*:*-*\s*(\d{1,2}((st)|(nd)|(th)|(rd))[-,./ ]*\s*[a-zA-z]*[-,./ ]*\s*\d{4})|((DOB)|(D.O.B)|(Date of Birth)|(birthday))\s*:*-*\s*\d{1,2}[-,./ ]\s*\d{1,2}[-,./ ]\s*\d{4}|((DOB)|(D.O.B)|(Date of Birth)|(birthday))\s*:*-*\s*[a-zA-Z]*[-,./ ]\d{1,2}[-,./ ]\s*\d{4}',text, re.IGNORECASE)
+
             if reg is None:
                 infoDict['DATE OF BIRTH'] = 'NA'
             else:
-                d = reg[0].replace('-', ' ')
-                d = d.split(':')
-                #infoDict['DATE OF BIRTH'] = d
-                if len(d) == 2:
-                    d = d[1].strip()
-                    infoDict['DATE OF BIRTH'] = d.replace(',','')
-                else:
-                    if d[0] == '':
-                        infoDict['DATE OF BIRTH'] = 'NA'
-                    else:
-                        infoDict['DATE OF BIRTH'] = d[0].replace(',','')
+                dobReg = re.search(
+                    r'(\d{1,2}[-,./ ]*\s*((\d{1,2})|([a-zA-z]*))[-,./ ]\s*\d{4})|(\d{1,2}((st)|(nd)|(th)|(rd))[-,./ ]*\s*[a-zA-z]*[-,./ ]*\s*\d{4})|(d{1,2}[-,./ ]\s*\d{1,2}[-,./ ]\s*\d{4}|[a-zA-Z]*[-,./ ]\d{1,2}[-,./ ]\s*\d{4})',
+                    reg[0], re.IGNORECASE)
+                infoDict['DATE OF BIRTH'] = dobReg[0].replace(',', ' ')
+
         elif reg is None:
             infoDict['DATE OF BIRTH'] = 'NA'
         else:
-            d = reg[0].replace('-', ' ')
-            d = d.split(':')
-            if len(d) == 2:
-                d = d[1].strip()
-                infoDict['DATE OF BIRTH'] = d.replace(',',' ')
-            else:
-                if d[0] == '':
-                    infoDict['DATE OF BIRTH'] = 'NA'
-                else:
-                    d = reg[0].strip()
-                    infoDict['DATE OF BIRTH'] = d.replace(',','')
+            dobReg = re.search(
+                r'(\d{1,2}[-,./ ]*\s*((\d{1,2})|([a-zA-z]*))[-,./ ]\s*\d{4})|(\d{1,2}((st)|(nd)|(th)|(rd))[-,./ ]*\s*[a-zA-z]*[-,./ ]*\s*\d{4})|(d{1,2}[-,./ ]\s*\d{1,2}[-,./ ]\s*\d{4}|[a-zA-Z]*[-,./ ]\d{1,2}[-,./ ]\s*\d{4})',
+                reg[0], re.IGNORECASE)
+            dob = dobReg[0]
+            infoDict['DATE OF BIRTH'] = dob.replace(',', ' ')
 
     #Function to get Gender.
     def getGender(self, inputString, infoDict, file):
@@ -190,100 +181,62 @@ class Parse():
         if reg is None and ext == '.pdf':
             text = convertPDFToTextUsingPypdf2(file)  # checking for text using PyPDF2 if not found using pdfminer
             text = text.replace('\n', '')
-            reg = re.search(r'((((gender)|(sex))[\s]*:\s*((male)|(female)|(m)|(f)))|((male)|(female)))',text, re.IGNORECASE)
+            reg = re.search(r'((((gender)|(sex))[\s]*[-=:]\s*((male)|(female)|(m)|(f)))|((male)|(female)))',text, re.IGNORECASE)
             if reg is None:
                 infoDict['GENDER'] = 'NA'
             else:
-                g = reg[0].replace('-', '')
-                g = g.split(':')
-                infoDict['GENDER'] = g
-                if len(g) == 2:
-                    infoDict['GENDER'] = g[1].strip()
-                else:
-                    if g[0] == '':
-                        infoDict['GENDER'] = 'NA'
-                    else:
-                        infoDict['GENDER'] = g[0]
+                g = re.search(r'((male)|(female)|(m)|(f))', reg[0], re.IGNORECASE)
+                infoDict['GENDER'] = g[0].strip()
         elif reg is None:
             infoDict['GENDER'] = 'NA'
         else:
-            g = reg[0].replace('-', '')
-            g = g.split(':')
-            if len(g) == 2:
-                infoDict['GENDER'] = g[1].strip()
-            else:
-                if g[0] == '':
-                    infoDict['GENDER'] = 'NA'
-                else:
-                    infoDict['GENDER'] = g[0]
+            g = re.search(r'((male)|(female)|(m)|(f))', reg[0], re.IGNORECASE)
+            infoDict['GENDER'] = g[0].strip()
 
     #Function to get Nationality.
     def getNationality(self, inputString, infoDict, file):
-        reg = re.search(r'((nationality)|(country))[\s]*:\s*[a-zA-Z]*', inputString, re.IGNORECASE)
+        reg = re.search(r'((nationality)|(country))[\s]*[-=:]\s*[a-zA-Z]*', inputString, re.IGNORECASE)
         ext = file[-4:]
         if reg is None and ext == '.pdf':
             text = convertPDFToTextUsingPypdf2(file)  # checking for text using PyPDF2 if not found using pdfminer
             text = text.replace('\n', '')
-            reg = re.search(r'((nationality)|(country))[\s]*:\s*[a-zA-Z]*',text, re.IGNORECASE)
+            reg = re.search(r'(((nationality)|(country))[\s]*[-=:]\s*[a-zA-Z]*)',text, re.IGNORECASE)
             if reg is None:
                 infoDict['NATIONALITY'] = 'NA'
             else:
-                nl = reg[0].replace('-', '')
-                nl = nl.split(':')
-                infoDict['NATIONALITY'] = nl
-                if len(nl) == 2:
-                    infoDict['NATIONALITY'] = nl[1].strip()
-                else:
-                    if nl[0] == '':
-                        infoDict['NATIONALITY'] = 'NA'
-                    else:
-                        infoDict['NATIONALITY'] = nl[0]
+                nl = re.search(r'([-=:]\s*[a-zA-Z]*)', reg[0], re.IGNORECASE)
+                nl = re.split('[-=:]', nl[0])
+                infoDict['NATIONALITY'] = nl[1].strip()
         elif reg is None:
             infoDict['NATIONALITY'] = 'NA'
         else:
-            nl = reg[0].replace('-', '')
-            nl = nl.split(':')
-            if len(nl) == 2:
-                infoDict['NATIONALITY'] = nl[1].strip()
-            else:
-                if nl[0] == '':
-                    infoDict['NATIONALITY'] = 'NA'
-                else:
-                    infoDict['NATIONALITY'] = nl[0]
+            nl = re.search(r'([-=:]\s*[a-zA-Z]*)', reg[0], re.IGNORECASE)
+            nl = re.split('[-=:]', nl[0])
+            infoDict['NATIONALITY'] = nl[1].strip()
 
     #Function to get Current Address
     def getCurrentAddress(self, inputString, infoDict, file):
-        reg = re.search(r'(((place)|(current location)|(current address))\s*:\s[A-Za-z]*)', inputString,re.IGNORECASE)
+        reg = re.search(r'(((current location)|(current address))\s*[-:=]\s*[A-Za-z]*)|(place\s*[-=:]\s{1,5}[a-zA-z]+)', inputString,re.IGNORECASE)
         ext = file[-4:]
         if reg is None and ext == '.pdf':
             text = convertPDFToTextUsingPypdf2(file) # checking for text using PyPDF2 if not found using pdfminer
             text = text.replace('\n', '')
-            reg = re.search(r'(((place)|(current location)|(current address))\s*:\s[A-Za-z]*)',text, re.IGNORECASE)
+            reg = re.search(r'(((current location)|(current address))\s*[-:=]\s*[A-Za-z]*)|(place\s*[-=: ][ ]{1,5}[a-zA-z]+)', text, re.IGNORECASE)
             if reg is None:
                 infoDict['CURRENT ADDRESS'] = 'NA'
             else:
-                adr = reg[0].replace('-', '')
-                adr = adr.split(':')
-                infoDict['CURRENT ADDRESS'] = adr
-                if len(adr) == 2:
-                    infoDict['CURRENT ADDRESS'] = adr[1].strip()
-                else:
-                    if adr[0] == '':
-                        infoDict['CURRENT ADDRESS'] = 'NA'
-                    else:
-                        infoDict['CURRENT ADDRESS'] = adr[0]
+                adr = re.search(r'([-=:]\s{0,5}[a-zA-z]+)', reg[0], re.IGNORECASE)
+                adr = re.split('[-=:]', adr[0])
+                infoDict['CURRENT ADDRESS'] = adr[1].strip()
         elif reg is None:
             infoDict['CURRENT ADDRESS'] = 'NA'
         else:
-            adr = reg[0].replace('-', '')
-            adr = adr.split(':')
-            if len(adr) == 2:
-                infoDict['CURRENT ADDRESS'] = adr[1].strip()
+            adr = re.search(r'([-=:]\s{0,5}[a-zA-z]+)', reg[0], re.IGNORECASE)
+            adr = re.split('[-=:]', adr[0])
+            if adr[1].strip() == '':
+                infoDict['CURRENT ADDRESS'] = 'NA'
             else:
-                if adr[0] == '':
-                    infoDict['CURRENT ADDRESS'] = 'NA'
-                else:
-                    infoDict['CURRENT ADDRESS'] = adr[0]
+                infoDict['CURRENT ADDRESS'] = adr[1].strip()
 
 if __name__ == "__main__":
     p = Parse()
